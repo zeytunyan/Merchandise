@@ -115,7 +115,7 @@ namespace Merchandise.Controllers
             if (orderedProduct == null)
                 await _orderedProductService.OrderProductAsync(productId, productsNum, orderId);
             else
-                await _orderedProductService.ChangeOrderedProductsNumberAsync(orderedProduct, productsNum);
+                await _orderedProductService.ChangeOrderedProduct(orderedProduct, productsNum, DateTimeOffset.UtcNow);
 
             var orderedProducts = await _orderedProductService.GetOrderedProductsAsync(orderId);
             return _mapService.MapToOrderModel(foundOrder, orderedProducts);
@@ -140,7 +140,7 @@ namespace Merchandise.Controllers
 
             // Не используем GetOrderWithProductsAsync, потому что надо пока просто проверить, существет ли заказ
             var order = await _orderService.FindOrderAsync(orderId);
-            await _orderedProductService.ChangeOrderedProductsNumberAsync(orderedProduct, newNumber);
+            await _orderedProductService.ChangeOrderedProduct(orderedProduct, newNumber);
             var orderedProducts = await _orderedProductService.GetOrderedProductsAsync(orderId);
             return (_mapService.MapToOrderModel(order, orderedProducts), order);
         }

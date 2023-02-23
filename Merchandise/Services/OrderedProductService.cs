@@ -41,9 +41,16 @@ namespace Merchandise.Services
             await _dataContext.SaveChangesAsync();
         }
 
-        public async Task ChangeOrderedProductsNumberAsync(OrderedProduct orderedProduct, int newNumber)
+        public async Task ChangeOrderedProduct(
+            OrderedProduct orderedProduct,
+            int newNumber,
+            DateTimeOffset newAddDate = default)
         {
             orderedProduct.Number = newNumber;
+
+            if (newAddDate != default)
+                orderedProduct.AddDate = newAddDate;
+
             await _dataContext.SaveChangesAsync();
         }
 
