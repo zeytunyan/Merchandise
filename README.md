@@ -1,8 +1,9 @@
 # Merchandise
 Simple JSON service for online trading.
 
-Built on ASP.NET Core
-DBMS - PostgreSQL
+Built on ASP.NET Core.
+<br>
+DBMS - PostgreSQL.
 
 Allows:
 1. Get a list of all products.
