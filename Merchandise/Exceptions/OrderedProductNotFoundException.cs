@@ -2,6 +2,6 @@
 {
     public class OrderedProductNotFoundException : NotFoundException
     {
-        public override string Message => "The order does not contain the specified product";
+        public override string Message => "The specified order does not contain the specified product";
     }
 }

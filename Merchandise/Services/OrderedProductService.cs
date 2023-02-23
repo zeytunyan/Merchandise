@@ -2,7 +2,6 @@
 using DataAccessLayer;
 using Merchandise.Exceptions;
 using Microsoft.EntityFrameworkCore;
-using System.ComponentModel;
 using Merchandise.Models;
 
 namespace Merchandise.Services
