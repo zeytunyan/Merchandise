@@ -10,20 +10,10 @@ namespace Merchandise.Controllers
     {
 
         private readonly OrderService _orderService;
-        private readonly ProductService _productService;
-        private readonly OrderedProductService _orderedProductService;
-        private readonly MapService _mapService;
 
-        public OrdersController(
-            OrderService orderService,
-            ProductService productService,
-            OrderedProductService orderedProductService,
-            MapService mapService)
+        public OrdersController(OrderService orderService)
         {
             _orderService = orderService;
-            _productService = productService;
-            _orderedProductService = orderedProductService;
-            _mapService = mapService;
         }
 
         [HttpGet]

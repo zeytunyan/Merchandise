@@ -9,21 +9,12 @@ namespace Merchandise.Controllers
     [ApiController]
     public class ProductController : ControllerBase
     {
-
-        private readonly OrderService _orderService;
         private readonly ProductService _productService;
-        private readonly OrderedProductService _orderedProductService;
         private readonly MapService _mapService;
 
-        public ProductController(
-            OrderService orderService,
-            ProductService productService,
-            OrderedProductService orderedProductService,
-            MapService mapService)
+        public ProductController(ProductService productService, MapService mapService)
         {
-            _orderService = orderService;
             _productService = productService;
-            _orderedProductService = orderedProductService;
             _mapService = mapService;
         }
 
@@ -45,7 +36,5 @@ namespace Merchandise.Controllers
         [ActionName("Remove")]
         public async Task<JsonResult> RemoveProductAsync(Guid id)
             => new(_mapService.MapToProductModel(await _productService.RemoveProductAsync(id)));
-
-
     }
 }
