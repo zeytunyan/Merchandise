@@ -3,20 +3,19 @@ using Merchandise.Exceptions;
 using Merchandise.Models;
 using Merchandise.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Xml.Linq;
 
 namespace Merchandise.Controllers
 {
-    [Route("[action]")]
+    [Route("[controller]/[action]")]
     [ApiController]
-    public class MerchandiseController : ControllerBase
+    public class CartController : ControllerBase
     {
         private readonly OrderService _orderService;
         private readonly ProductService _productService;
         private readonly OrderedProductService _orderedProductService;
         private readonly MapService _mapService;
 
-        public MerchandiseController(
+        public CartController(
             OrderService orderService, 
             ProductService productService,
             OrderedProductService orderedProductService,
@@ -29,16 +28,7 @@ namespace Merchandise.Controllers
         }
 
         [HttpGet]
-        [ActionName("catalogue")]
-        public async Task<JsonResult> CatalogueAsync(int skip = 0, int take = 10)
-            => new(await _productService.GetProductsAsync(skip, take));
-
-        [HttpGet]
-        [ActionName("orders")]
-        public async Task<JsonResult> OrdersAsync() => new(await _orderService.GetOrdersAsync());
-
-        [HttpGet]
-        [ActionName("cart")]
+        [ActionName("Cart")]
         public async Task<JsonResult> CartAsync(Guid orderId)
         {
             var order = await _orderService.FindOrderAsync(orderId);
@@ -47,16 +37,7 @@ namespace Merchandise.Controllers
         }
 
         [HttpPost]
-        [ActionName("add-product")]
-        public async Task<JsonResult> AddProductAsync([FromForm] ProductCreationModel productCreation)
-        {
-            var product = _mapService.MapToProduct(productCreation);
-            await _productService.AddProductAsync(product);
-            return new(_mapService.MapToProductModel(product));
-        }
-
-        [HttpPost]
-        [ActionName("add-to-cart")]
+        [ActionName("Add")]
         public async Task<JsonResult> AddToCartAsync(Guid productId, int productsNum = 1, Guid orderId = default)
         {
             if (productsNum < 1)
@@ -74,12 +55,12 @@ namespace Merchandise.Controllers
         }
 
         [HttpPut]
-        [ActionName("add-one")]
+        [ActionName("Increment")]
         public async Task<JsonResult> AddOneAsync(Guid productId, Guid orderId)
             => new((await ChangeNumberAsync(productId, 1, orderId)).OrderModel);
 
         [HttpPut]
-        [ActionName("remove-one")]
+        [ActionName("Decrement")]
         public async Task<JsonResult> RemoveOneAsync(Guid productId, Guid orderId)
         {
             var (orderModel, order) = await ChangeNumberAsync(productId, -1, orderId);
@@ -87,7 +68,7 @@ namespace Merchandise.Controllers
         }
 
         [HttpPut]
-        [ActionName("set-number")]
+        [ActionName("SetNumber")]
         public async Task<JsonResult> SetNumberAsync(Guid productId, int productsNumber, Guid orderId)
         {
             var (orderModel, order) = await ChangeNumberAsync(productId, productsNumber, orderId, true);
@@ -95,12 +76,7 @@ namespace Merchandise.Controllers
         }
 
         [HttpDelete]
-        [ActionName("remove-product")]
-        public async Task<JsonResult> RemoveProductAsync(Guid id)
-            => new(_mapService.MapToProductModel(await _productService.RemoveProductAsync(id)));
-
-        [HttpDelete]
-        [ActionName("remove-from-cart")]
+        [ActionName("Remove")]
         public async Task<JsonResult> RemoveFromCartAsync(Guid productId, Guid orderId)
         {
             var (orderModel, order) = await ChangeNumberAsync(productId, 0, orderId, true);
@@ -108,13 +84,14 @@ namespace Merchandise.Controllers
         }
 
         [HttpDelete]
-        [ActionName("clean-cart")]
+        [ActionName("Clean")]
         public async Task<JsonResult> CleanCartAsync(Guid orderId)
         {
             var order = await _orderService.FindOrderAsync(orderId);
             await _orderService.DeleteOrderAsync(order);
             return new(_mapService.MapToOrderDeletionModel(order));
         }
+
 
         private async Task<OrderModel> AddToNewOrderAsync(Product product, int productsNum)
         {
