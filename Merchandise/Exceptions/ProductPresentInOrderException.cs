@@ -2,6 +2,6 @@
 {
     public class ProductPresentInOrderException : Exception
     {
-        public override string Message => $"The product is present in the order";
+        public override string Message => "The product is present in the order";
     }
 }

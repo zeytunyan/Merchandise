@@ -2,6 +2,6 @@
 {
     public class IncorrectProductsNumberException : Exception
     {
-        public override string Message => $"Incorrect products number";
+        public override string Message => "Incorrect products number";
     }
 }

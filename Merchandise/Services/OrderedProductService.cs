@@ -19,6 +19,7 @@ namespace Merchandise.Services
 
         public async Task<List<OrderedProductModel>> GetOrderedProductsAsync(Guid orderId)
         {
+            // Выдаются товары, которых на складе 0 или меньше, чем заказано
             return await _dataContext.OrderedProducts
                 .Include(op => op.Product)
                 .Where(op => op.OrderId == orderId && op.Number > 0 && op.Product != null)

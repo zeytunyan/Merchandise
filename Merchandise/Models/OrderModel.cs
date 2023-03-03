@@ -6,5 +6,5 @@
         DateTimeOffset Created,
         DateTimeOffset? Confirmed,
         List<OrderedProductModel> Products 
-    );
+    ) : ShortOrderModel(Id, Created, Confirmed);
 }

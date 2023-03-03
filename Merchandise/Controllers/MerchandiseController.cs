@@ -3,6 +3,7 @@ using Merchandise.Exceptions;
 using Merchandise.Models;
 using Merchandise.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Xml.Linq;
 
 namespace Merchandise.Controllers
 {
@@ -33,12 +34,25 @@ namespace Merchandise.Controllers
             => new(await _productService.GetProductsAsync(skip, take));
 
         [HttpGet]
+        [ActionName("orders")]
+        public async Task<JsonResult> OrdersAsync() => new(await _orderService.GetOrdersAsync());
+
+        [HttpGet]
         [ActionName("cart")]
         public async Task<JsonResult> CartAsync(Guid orderId)
         {
             var order = await _orderService.FindOrderAsync(orderId);
             var orderedProducts = await _orderedProductService.GetOrderedProductsAsync(orderId);
             return new(_mapService.MapToOrderModel(order, orderedProducts));
+        }
+
+        [HttpPost]
+        [ActionName("add-product")]
+        public async Task<JsonResult> AddProductAsync([FromForm] ProductCreationModel productCreation)
+        {
+            var product = _mapService.MapToProduct(productCreation);
+            await _productService.AddProductAsync(product);
+            return new(_mapService.MapToProductModel(product));
         }
 
         [HttpPost]
@@ -79,6 +93,11 @@ namespace Merchandise.Controllers
             var (orderModel, order) = await ChangeNumberAsync(productId, productsNumber, orderId, true);
             return await MakeJsonBasedOnDeletionAsync(orderModel, order);
         }
+
+        [HttpDelete]
+        [ActionName("remove-product")]
+        public async Task<JsonResult> RemoveProductAsync(Guid id)
+            => new(_mapService.MapToProductModel(await _productService.RemoveProductAsync(id)));
 
         [HttpDelete]
         [ActionName("remove-from-cart")]

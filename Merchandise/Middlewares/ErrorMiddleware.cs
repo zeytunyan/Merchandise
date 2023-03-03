@@ -30,6 +30,10 @@ namespace Merchandise.Middlewares
             {
                 await WriteError(context, StatusCodes.Status400BadRequest, ex.Message);
             }
+            catch (NotOnSaleException ex)
+            {
+                await WriteError(context, StatusCodes.Status400BadRequest, ex.Message);
+            }
             catch (Exception ex)
             {
                 await WriteError(context, StatusCodes.Status500InternalServerError, ex.Message);

@@ -30,10 +30,29 @@ namespace Merchandise.Services
 
         public async Task<Product> FindProductAsync(Guid productId)
         {
+            // Если продукта нет на складе, он все равно выдается
             var product = await _dataContext.Products
                 .FirstOrDefaultAsync(p => p.Id == productId);
 
             return product ?? throw new ProductNotFoundException();
+        }
+
+        public async Task AddProductAsync(Product product)
+        {
+            await _dataContext.Products.AddAsync(product);
+            await _dataContext.SaveChangesAsync();
+        }
+
+        public async Task<Product> RemoveProductAsync(Guid productId)
+        {
+            var product = await FindProductAsync(productId);
+
+            if (product.Number == 0)
+                throw new NotOnSaleException();
+
+            product.Number = 0;
+            await _dataContext.SaveChangesAsync();
+            return product;
         }
     }
 }
