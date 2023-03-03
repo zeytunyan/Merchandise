@@ -157,7 +157,6 @@ namespace Merchandise.Controllers
             if (newNumber > product.Number)
                 throw new NotEnoughInStockException();
 
-            // Не используем GetOrderWithProductsAsync, потому что надо пока просто проверить, существет ли заказ
             var order = await _orderService.FindOrderAsync(orderId);
             await _orderedProductService.ChangeOrderedProduct(orderedProduct, newNumber);
             var orderedProducts = await _orderedProductService.GetOrderedProductsAsync(orderId);
