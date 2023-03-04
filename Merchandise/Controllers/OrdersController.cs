@@ -17,7 +17,7 @@ namespace Merchandise.Controllers
 
         [HttpGet]
         [ActionName("Orders")]
-        public async Task<JsonResult> OrdersAsync() 
-            => new(await _orderService.GetOrdersAsync());
+        public async Task<JsonResult> OrdersAsync(int skip = 0, int take = 20) 
+            => new(await _orderService.GetOrdersAsync(skip, take));
     }
 }

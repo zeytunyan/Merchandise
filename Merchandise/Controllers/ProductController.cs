@@ -19,7 +19,7 @@ namespace Merchandise.Controllers
 
         [HttpGet]
         [ActionName("Catalogue")]
-        public async Task<JsonResult> CatalogueAsync(int skip = 0, int take = 10)
+        public async Task<JsonResult> CatalogueAsync(int skip = 0, int take = 20)
             => new(await _productService.GetProductsAsync(skip, take));
 
         [HttpPost]

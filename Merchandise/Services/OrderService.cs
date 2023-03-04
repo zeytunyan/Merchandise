@@ -18,11 +18,14 @@ namespace Merchandise.Services
             _mapService = mapService;
         }
 
-        public async Task<List<ShortOrderModel>> GetOrdersAsync()
+        public async Task<List<ShortOrderModel>> GetOrdersAsync(int skip, int take)
         {
+            // Нужна ли пагинация?
             return await _dataContext.Orders
                 .Where(o => !o.IsDeleted)
+                .Skip(skip).Take(take)
                 .Select(o => _mapService.MapToShortOrderModel(o))
+                .AsNoTracking()
                 .ToListAsync();
         }
 
